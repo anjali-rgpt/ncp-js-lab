@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trials</title>
+    <style>
+        .col{
+            float:left;
+        }
+        #right table{
+            margin-left:1em;
+            border:2px solid black;
+        }
+        #right td{
+            padding-left:1em;
+            padding-right:1em;
+            border-left:1px solid black;
+            border-bottom:1px solid black;
+            
+        }
+
+        #right h1{
+            margin-left:0.5em;
+        }
+
+        
+
+        
+    </style>
+    <script>
+        players=['Warrior', 'Healer', 'Mage', 'Defense', 'Support']
+        icons=['Images/warrior.png', 'Images/healer.png', 'Images/mage.png','Images/defense.png', 'Images/support.png']
+        pairs={};
+        var i=0, count=0;
+        document.write('<div class=cont>');
+        document.write('<div class=col>');
+        document.write('<h1>Player List</h1>');
+        document.write('<table>')
+
+        for (i; i<players.length;i++){
+            document.write('<tr>');
+            document.write('<td><b><i>'+players[i]+'</i></b></td>');
+            document.write(`<td><img src=${icons[i]} width=100px height=100px></td>`);
+            document.write('</tr>');
+            pairs[players[i]]=0;
+        }
+        console.log(pairs);
+        document.write('</table>');
+        document.write('</div>');
+
+        document.write('<div class=col id=right>');
+        document.write('<h1>Frequency</h1>')
+        frequency=[]
+
+
+        min=Math.ceil(1);
+        max=Math.floor(6);
+        while (count<10){
+            temp=JSON.parse(JSON.stringify(pairs)); // used to create a deep copy of object
+            freq=[]
+            choice=Math.floor(Math.random()*(max-min) + min); //to make the values integers
+            pairs[players[choice-1]]++;
+            console.log(pairs);
+            for (i=0;i<players.length;i++){
+               freq[i]=pairs[players[i]]-temp[players[i]];
+            }
+            frequency[count]=freq;
+            count++;
+        }
+        console.log(frequency);
+        document.write('<table>');
+        for(i=0;i<5;i++){
+            document.write('<tr>');
+            for(j=0;j<10;j++){
+                document.write('<td height=100px>'+frequency[j][i]+'</td>');
+            }
+            document.write('<td><h2>'+pairs[players[i]]+'</h2></td>');
+            document.write('</tr>');
+        }
+        document.write('</table>')
+        document.write('</div>')
+        document.write('</div>');
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

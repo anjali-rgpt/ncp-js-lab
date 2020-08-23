@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table of Contents</title>
+
+    <script>
+        function contentgenerator(titles, pages,mx) {
+
+            var i, j, temp;
+
+            for (i = 0; i < pages.length; i++) {
+                minval = i;
+                for (j = i + 1; j < pages.length; j++) {
+                    if (pages[j] < pages[minval]) {
+                        minval = j;
+                    }
+                }
+
+                temp = pages[minval];
+                pages[minval] = pages[i];
+                pages[i] = temp;
+
+                temp = titles[minval];
+                titles[minval] = titles[i];
+                titles[i] = temp;
+            }
+
+            //document.write('Sorted titles:' + titles);
+            //document.write('Sorted pages:' + pages);
+
+            document.write('<table>');
+            for (i = 0; i < pages.length; i++) {
+                document.write('<tr>');
+                document.write('<td>' + (i + 1) + '.</td>');
+                document.write('<td>'+titles[i]+' . '.repeat(mx-titles[i].length)+'</td>');
+                document.write('<td>'+pages[i]+'</td>');
+                document.write('</tr>');
+            }
+            document.write('</table>');
+        }
+
+        titles = [];
+        pagenums = [];
+        maxlength = 0;
+        index = 0;
+        choice = prompt("Enter in format Title,Page, Q to quit:");
+        console.log(choice)
+        while (choice != 'Q' && choice != 'q') {
+            console.log('Loop')
+            splitlist = choice.split(',');
+            if (splitlist.length != 2 || splitlist[0] == '\s' || splitlist[1] == '\s' || isNaN(splitlist[1])) {
+                choice = prompt("Error. Enter in format Title,Page, Q to quit");
+                continue;
+            }
+
+            titles[index] = splitlist[0];
+            pagenums[index] = splitlist[1];
+            if (splitlist[0].length > maxlength)
+                maxlength = splitlist[0].length;
+            index++;
+            choice = prompt("Enter in format Title,Page, Q to quit:");
+        }
+
+        if (titles.length == 0 || pagenums.length == 0) {
+            document.write('Empty Book')
+        } else {
+            contentgenerator(titles, pagenums, maxlength);
+        }
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

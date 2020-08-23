@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Table</title>
+    <style>
+        td,th{
+            text-align: center;
+            border:black solid 2px;
+            padding:1em;
+        }
+        table{
+            border:black solid 1px;
+        }
+    </style>
+    <script>
+        function multTable(rows, columns) {
+            
+            var i=0;
+            var j=1;
+
+            document.write('<table><tr>');
+            for(i;i<=columns;i++){
+                if(i==0){
+                    document.write('<th>'+ '' + '</th>')
+                }
+                else{
+              document.write('<th><b>'+ i + '</b></th>');
+                }
+            }
+            document.write('</tr>');
+
+            for (i=1;i<=rows;i++){
+                document.write('<tr>');
+                for(j=0;j<=columns;j++){
+                    if(j==0){
+                        document.write('<td><b>'+ i + '</b></td>');
+                    }
+                    else{
+                        document.write('<td>'+ (i*j) + '</td>');
+                    }
+                }
+                document.write('</tr>');
+            }
+            document.write('</table>');
+        }
+
+        r = prompt('Enter rows:', 1);
+        c = prompt('Enter cols:', 1);
+        multTable(r, c)
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

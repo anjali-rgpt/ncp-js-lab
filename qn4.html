@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock</title>
+    <link href='https://fonts.googleapis.com/css?family=Orbitron&text=0123456789:AMP' rel='stylesheet' type='text/css'>
+    <style>
+        main {
+            width: 25%;
+            border: 1px solid black;
+            background: beige;
+            border-radius: 5pt;
+            margin-left: 35%;
+            margin-top: 15%;
+
+        }
+
+        #time .col,
+        #words .col {
+            float: left;
+        }
+
+
+        .row {
+            padding: 1em;
+            margin: 0.5em;
+            /*border:1px solid red;*/
+            text-align: center;
+        }
+
+        #fulldate,
+        #day {
+            width: 50%;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bolder;
+            font-size: larger;
+        }
+
+        #hours,
+        #minutes,
+        #seconds,
+        #ampm {
+            width: 16.6%;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #time {
+            padding-left: 5em;
+        }
+
+        #buttons {
+
+            align-content: space-around;
+        }
+
+        #alarm{
+            text-align:center;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+      
+    </style>
+    <script>
+        var stored=[];
+        var count=0;
+        months={'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+        function clockUpdate() {
+            var timeNow = new Date();
+
+            var hour = timeNow.getHours();
+            var min = timeNow.getMinutes();
+            var sec = timeNow.getSeconds();
+
+            var ampm = (hour < 12) ? "AM" : "PM";
+            orighour=timeNow.getHours();
+
+            hour = (hour == 0) ? 12 : hour;
+            hour = (hour > 12) ? hour % 12 : hour; //12 hour format
+
+            var dighour = (hour < 10 ? "0" : "") + hour;
+            var digmin = (min < 10 ? "0" : "") + min;
+            var digsec = (sec < 10 ? "0" : "") + sec;
+
+
+            hour = dighour;
+            min = digmin;
+            sec = digsec;
+
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            var curDay = days[timeNow.getDay()]
+
+            var year = timeNow.getFullYear();
+            var month = timeNow.getMonth()+1;
+            var date = timeNow.getDate();
+
+            var datestring = date + "-" + month + "-" + year;
+
+            for (var i=0;i<stored.length;i++){
+                //console.log(stored)
+                alarmData=stored[i]
+                //console.log(alarmData)
+                alarmmonth=alarmData.getMonth();
+                alarmyear=alarmData.getFullYear();
+                alarmday=alarmData.getDate();
+                //console.log(month==alarmmonth && year==parseInt(alarmyear) && date==parseInt(alarmday));
+                if (month==alarmmonth && year==alarmyear && date==alarmday ){
+                    //console.log(orighour,parseInt(alarmData[4].split(':')[0]),min,alarmData[4].split(':')[1])
+                    if ( orighour >= alarmData.getHours() && min>=alarmData.getMinutes()){
+                    
+                    document.getElementById('Message').className='show';
+                    
+                    }
+                    else{
+                        document.getElementById('Message').className='hide';
+                    }
+                    
+                }
+            }
+
+            document.getElementById('fulldate').innerHTML = datestring;
+            document.getElementById('day').innerHTML = curDay;
+
+            document.getElementById('hours').innerHTML = hour;
+            document.getElementById('minutes').innerHTML = min;
+            document.getElementById('seconds').innerHTML = sec;
+            document.getElementById('ampm').innerHTML = ampm;
+
+            
+        }
+
+        function alarm() {
+            if (document.getElementById('alarm').className != 'show')
+                document.getElementById('alarm').className = 'show';
+            else
+                document.getElementById('alarm').className = 'hide';
+        }
+
+        function addAlarm() {
+            seldate=document.getElementById('alarmselect').value;
+            dt=seldate.split('T');
+            year=dt[0].split('-')[0]
+            month=dt[0].split('-')[1]
+            date=dt[0].split('-')[2]
+            hr=dt[1].split(':')[0]
+            mn=dt[1].split(':')[1]
+            console.log(seldate);
+            var temp=new Date(parseInt(year),parseInt(month),parseInt(date),parseInt(hr),parseInt(mn));
+            stored[count++]=temp;
+            console.log(stored)
+            alert('Alarm set');
+            
+        }
+
+        function resetAlarm(){
+            stored=[];
+            alert('Cleared alarms');
+            document.getElementById('Message').className='hide';
+        }
+    </script>
+</head>
+
+<body onload="clockUpdate(); setInterval('clockUpdate()', 1000)">
+    <main id="box">
+        <section id="clock">
+            <section id="words" class="row">
+                <section id="fulldate" class="col"></section>
+                <section id="day" class="col"></section>
+            </section>
+            <br />
+            <section id="time" class="row">
+                <div id="hours" class="col">HH</div>
+                <div class="col">:</div>
+                <div id="minutes" class="col">MM</div>
+                <div class="col">:</div>
+                <div id="seconds" class="col">SS</div>
+                <div id="ampm" class="col">AMPM</div>
+            </section>
+        </section>
+        <br />
+        <section id='buttons' class='row'>
+            <input type='button' value='Alarm' id='Alarm' onclick="alarm()" />
+            <!--<input type='button' value='Stopwatch' id='Stopwatch' onclick="stop()" /> -->
+        </section>
+        <section id='alarm' class='hide'>
+            <h3>Alarm</h3>
+            <input type="datetime-local" id='alarmselect' />
+            <input type="button" id="alarmset" value='Set' onclick="addAlarm()"/>
+            <input type="button" id="alarmreset" value='Reset' onclick="resetAlarm()"/>
+        </section>
+    </main>
+    <h1 class="hide" id="Message">ALARM</h1>
+</body>
+
+</html>
